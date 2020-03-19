@@ -37,11 +37,15 @@
                   </v-flex>
 
                 <v-flex xs7>
+                    <h2>Search Snippet</h2>
+                    <v-text-field v-model="searchWord" v-on:keyup="abstruct" label="Input Keyword" style='margin-top:4px'></v-text-field>
                     <v-card style="margin-top:10px" v-for="snippet in snippetList">
+                        <a v-bind:id="snippet.id"></a>
                         <v-card-title primary-title>
-                          <a v-bind:id='snippet.id'></a>
-                          <!-- ここから編集する -->
-                          <h3 class="headline"> {{ snippet.title }} </h3> <!-- 説明 3.16 -->
+                         <!-- ここから編集する -->
+                          <div style="background-color:#FFCDD2">
+                            <h3 class="headline">[{{ snippet.language }}] {{ snippet.title }}</h3>
+                          </div>
                           <!-- ここまで編集する -->
                         </v-card-title>
                         <div style='margin: 10px 20px;'>
@@ -169,6 +173,7 @@
             deleteTitle: '',
             deleteLanguage: '',
             deleteContents: '',
+            searchWord: '',
           }
         },
         mounted () {
@@ -257,13 +262,17 @@
             if (this.language == 'ALL') { // 説明 4.4
               this.snippetList = []
               for (i=0;i<this.allData.length;i++) { // 説明 4.5
-                this.snippetList.push(this.allData[i]) // 説明 4.5
+                if ((this.allData[i].contents.indexOf(this.searchWord) !== -1) || (this.allData[i].title.indexOf(this.searchWord) !== -1) || (this.allData[i].language.indexOf(this.searchWord) !== -1)) { // 説明 4.7
+                  this.snippetList.push(this.allData[i])
+                }
               }
             } else if (this.language != '') {
               this.snippetList = []
               for (i=0;i<this.allData.length;i++) { // 説明 4.5
-                if (this.allData[i].language == this.language) { // 説明 4.6
-                  this.snippetList.push(this.allData[i]) // 説明 4.5
+                if (this.allData[i].language == this.language) {
+                  if ((this.allData[i].contents.indexOf(this.searchWord) !== -1) || (this.allData[i].title.indexOf(this.searchWord) !== -1) || (this.allData[i].language.indexOf(this.searchWord) !== -1)) {
+                    this.snippetList.push(this.allData[i]) // 説明 4.5
+                  }
                 }
               }
             }
