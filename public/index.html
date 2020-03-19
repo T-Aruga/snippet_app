@@ -10,6 +10,7 @@
       <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
       <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/vuetify@1.5/dist/vuetify.js"></script>
+      <script src="https://cdn.rawgit.com/showdownjs/showdown/1.9.0/dist/showdown.min.js"></script>
 
       <title>Snippet App</title>
   </head>
@@ -50,7 +51,7 @@
                         </v-card-title>
                         <div style='margin: 10px 20px;'>
                           <!-- ここから編集する -->
-                          <textarea style='width:100%; height:300px; background-color:#efefef; padding:3px'> {{ snippet.contents }} </textarea>
+                          <div v-html='showdown.makeHtml(snippet.contents)'></div>
                           <!-- ここまで編集する -->
                         </div>
 
@@ -177,9 +178,9 @@
           }
         },
         mounted () {
-          // ここから追記する
           this.listSnippet();
-          // ここまで追記する
+          options = { headerLevelStart: 3, omitExtraWLInCodeBlocks: true, tables: true, simpleLineBreaks: true, simplifiedAutoLink: true } // 説明 4.8
+          this.showdown = new showdown.Converter(options)
         },
         methods: {
           // ここから追記する
